@@ -1,0 +1,12 @@
+kube_vip_version: "v0.8.0"
+vip_interface: eth0
+vip: 192.168.1.130
+
+metallb_version: v0.13.12
+lb_range: 192.168.1-140-192.168.1.150
+lb_pool_name: first-pool
+
+
+ansible_user: pk
+ansible_become: true
+ansible_become_method: sudo

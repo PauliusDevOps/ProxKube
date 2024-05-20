@@ -1,0 +1,60 @@
+name: Connect to HomeLab
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Requests
+        run: pip install requests
+
+      - name: Install proxmoxer
+        run: pip install proxmoxer
+        
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          tags: tag:ci
+
+      #- name: Create Proxmox infrastructure
+      #  uses: dawidd6/action-ansible-playbook@v2
+      #  with:
+      #    playbook: ansible/infrastructure.yml
+      #    directory: ./
+      #    key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #    requirements: ansible/collections/requirements.yaml
+      #    options: |
+      #      --inventory ansible/inventory/.ansible_inventory
+      #      --extra-vars "@ansible/inventory/variables.yml"
+      #      --verbose
+#
+      - name: Run Kubernetes install
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: ansible/install_kubernetes.yml
+          directory: ./
+          # Use secrets manager to access SSH key securely
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          requirements: ansible/collections/requirements.yaml
+          # Use the copied inventory file #ansible/inv.yml
+          options: |
+           --inventory ansible/inventory/.ansible_inventory 
+           --extra-vars "@ansible/inventory/variables.yml"
+           --verbose
+          
+ 

@@ -1,0 +1,109 @@
+- name: Check if the template already exists
+  shell: qm status 8000
+  ignore_errors: true
+  register: template_status
+  changed_when: false
+
+- name: Check if VM does not exist
+  set_fact:
+    vm_does_not_exist: "{{ 'does not exist' in template_status.stderr }}"
+
+- name: Remove existing cloud image if present
+  command: rm -f {{ image_filename }}
+  args:
+    chdir: /root  # or specify the appropriate directory
+  when: vm_does_not_exist
+
+- name: Download Ubuntu cloud image
+  command: wget https://cloud-images.ubuntu.com/jammy/current/{{ image_filename }}      #https://cloud-images.ubuntu.com/noble/current/{{ image_filename }}
+  args:
+    chdir: /root  # or specify the appropriate directory
+  when: vm_does_not_exist
+
+- name: Install resolvconf package
+  apt:
+    name: resolvconf
+    state: present
+  when: vm_does_not_exist
+
+- name: Install libguestfs-tools package
+  apt:
+    name: libguestfs-tools
+    state: present
+  when: vm_does_not_exist
+
+- name: Update package cache
+  apt:
+    update_cache: yes
+  when: vm_does_not_exist
+
+- name: Install qemu-guest-agent package
+  apt:
+    name: qemu-guest-agent
+    state: present
+  when: vm_does_not_exist
+
+- name: Truncate /etc/machine-id in the cloud image
+  command: virt-customize -a /root/{{ image_filename }} --install qemu-guest-agent --truncate /etc/machine-id
+  when: vm_does_not_exist
+
+- name: Create VM on Proxmox
+  shell: |
+    qm create 8000 --memory 3072 --core 1 --name ubuntu-cloud --net0 virtio,bridge=vmbr0 &&
+    qm importdisk 8000 /root/{{ image_filename }} CephPool &&
+    qm set 8000 --scsihw virtio-scsi-pci --scsi0 CephPool:vm-8000-disk-0 &&
+    qm set 8000 --ide2 CephPool:cloudinit &&
+    qm set 8000 --boot c --bootdisk scsi0 &&
+    qm set 8000 --serial0 socket --vga serial0
+  args:
+    executable: /bin/bash
+  when: vm_does_not_exist
+
+- name: Set memory size and disable ballooning
+  shell: qm set 8000 --memory 3072 --balloon 0
+  args:
+    executable: /bin/bash
+  when: vm_does_not_exist
+  
+- name: Set processor cores and enable NUMA
+  shell: qm set 8000 --cores 1 --sockets 1 --numa 1
+  args:
+    executable: /bin/bash
+  when: vm_does_not_exist
+
+- name: Resize VM disk and set SSD emulation
+  shell: |
+    qm resize 8000 scsi0 +10G &&
+    qm set 8000 --scsihw virtio-scsi-pci --scsi0 CephPool:vm-8000-disk-0
+  args:
+    executable: /bin/bash
+  when: vm_does_not_exist
+
+- name: Configure Cloud-Init settings
+  shell: |
+    qm set 8000 \
+        --ipconfig0 ip=192.168.1.222/24,gw=192.168.1.1 \
+        --nameserver 1.1.1.1 \
+        --sshkey ~/.ssh/id_rsa.pub \
+        --cipassword ${{ VMPASS }} \ 
+        --ciuser pk
+  args:
+    executable: /bin/bash
+  when: vm_does_not_exist
+
+- name: Enable QEMU Guest Agent
+  shell: qm set 8000 --agent 1
+  args:
+    executable: /bin/bash
+  when: vm_does_not_exist
+
+- name: Check if VM is already a template
+  stat:
+    path: /etc/pve/qemu-server/8000.conf.tpl
+  when: vm_does_not_exist
+
+- name: Convert VM to Template if not already a template
+  shell: qm template 8000
+  args:
+    executable: /bin/bash
+  when: vm_does_not_exist

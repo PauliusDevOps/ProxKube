@@ -1,0 +1,73 @@
+os: "linux"
+arch: "amd64"
+
+kube_vip_version: "v0.8.0"
+vip_interface: eth0
+vip: 192.168.1.160
+
+metallb_version: v0.13.12
+lb_range: 192.168.1-140-192.168.1.150
+lb_pool_name: first-pool
+
+rke2_version: "v1.29.4+rke2r1"
+rke2_install_dir: "/usr/local/bin"
+rke2_binary_url: "https://github.com/rancher/rke2/releases/download/{{ rke2_version }}/rke2.linux-amd64"
+
+#ansible_user: pk
+ansible_become: true
+ansible_become_method: sudo
+
+image_filename: jammy-server-cloudimg-amd64-disk-kvm.img 
+VMPASS: secrets.VMPASS 
+proxmox_api_user: secrets.PROXMOX_API_USER
+proxmox_api_token_id: secrets.PROXMOX_API_TOKEN_ID
+proxmox_api_token_secret: secrets.PROXMOX_API_TOKEN_SECRET
+
+proxmox_storage: CephPool
+proxmox_clone_template: ubuntu-cloud
+vms:
+  - name: "master1"
+    vmid: 101
+    ipv4_address: "192.168.1.170/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "ipa"
+  - name: "worker1"
+    vmid: 102
+    ipv4_address: "192.168.1.171/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "ipa"
+  - name: "worker2"
+    vmid: 103
+    ipv4_address: "192.168.1.172/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "ipa"
+  - name: "master2"
+    vmid: 201
+    ipv4_address: "192.168.1.173/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "lager"
+  - name: "worker3"
+    vmid: 202
+    ipv4_address: "192.168.1.174/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "lager"
+  - name: "worker4"
+    vmid: 203
+    ipv4_address: "192.168.1.175/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "lager"
+  - name: "master3"
+    vmid: 301
+    ipv4_address: "192.168.1.176/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "ale"
+  - name: "worker5"
+    vmid: 302
+    ipv4_address: "192.168.1.177/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "ale"
+  - name: "worker6"
+    vmid: 303
+    ipv4_address: "192.168.1.178/24"
+    ipv4_gateway: "192.168.1.1"
+    node: "ale"
