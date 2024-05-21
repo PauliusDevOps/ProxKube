@@ -25,12 +25,12 @@ jobs:
       - name: Install proxmoxer
         run: pip install proxmoxer
         
-#      - name: Connect to Tailscale
-#        uses: tailscale/github-action@v2
-#        with:
-#          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-#          tags: tag:ci
-#
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          tags: tag:ci
+
 #      - name: Create Proxmox infrastructure
 #        uses: dawidd6/action-ansible-playbook@v2
 #        with:
