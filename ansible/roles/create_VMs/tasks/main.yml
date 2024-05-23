@@ -64,16 +64,16 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: Wait for VMs to become reachable via SSH
-  wait_for:
-    host: "{{ item.ipv4_address }}"  # IP address of the VM
-    port: 22  # SSH port
-    delay: 10  # Initial delay before starting the checks
-    timeout: 300  # Overall timeout for this task
-    state: started  # Wait until the port is open
-  loop: "{{ vms }}"  # Loop through the VMs list
-  loop_control:
-    label: "{{ item.name }}"  # Label for each loop iteration
+#fdsf- name: Wait for VMs to become reachable via SSH
+#fdsf  wait_for:
+#fdsf    host: "{{ item.ipv4_address }}"  # IP address of the VM
+#fdsf    port: 22  # SSH port
+#fdsf    delay: 10  # Initial delay before starting the checks
+#fdsf    timeout: 300  # Overall timeout for this task
+#fdsf    state: started  # Wait until the port is open
+#fdsf  loop: "{{ vms }}"  # Loop through the VMs list
+#fdsf  loop_control:
+#fdsf    label: "{{ item.name }}"  # Label for each loop iteration
 
 - name: Ensure VMs are ready for SSH connections
   command: /bin/true
