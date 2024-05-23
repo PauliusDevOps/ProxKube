@@ -13,12 +13,13 @@
     state: latest
     
 
-- name: List VMs
-  shell: qm list
-  register: vm_list
-  ignore_errors: true  # Ignore errors if the command fails
-- name: Delete VMs
-  shell: "qm stop {{ item.split()[0] }} && qm destroy {{ item.split()[0] }}"
-  when: item.split()[0] != '8000' and item.split()[0] | int > 0  # Skip VM with ID 8000 and ensure VM ID is numeric
-  with_items: "{{ vm_list.stdout_lines }}"
-  ignore_errors: true
+#- name: List VMs
+#  shell: qm list
+#  register: vm_list
+#  ignore_errors: true  # Ignore errors if the command fails
+#- name: Delete VMs
+#  shell: "qm stop {{ item.split()[0] }} && qm destroy {{ item.split()[0] }}"
+#  when: item.split()[0] != '8000' and item.split()[0] | int > 0  # Skip VM with ID 8000 and ensure VM ID is numeric
+#  with_items: "{{ vm_list.stdout_lines }}"
+#  ignore_errors: true
+#
