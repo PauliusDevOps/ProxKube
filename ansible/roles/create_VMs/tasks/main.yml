@@ -64,7 +64,24 @@
   loop_control:
     label: "{{ item.name }}"
 
+- name: Wait for VMs to become reachable via SSH
+  wait_for:
+    host: "{{ item.ipv4_address }}"  # IP address of the VM
+    port: 22  # SSH port
+    delay: 10  # Initial delay before starting the checks
+    timeout: 300  # Overall timeout for this task
+    state: started  # Wait until the port is open
+  loop: "{{ vms }}"  # Loop through the VMs list
+  loop_control:
+    label: "{{ item.name }}"  # Label for each loop iteration
 
+- name: Ensure VMs are ready for SSH connections
+  command: /bin/true
+  delegate_to: "{{ item.ipv4_address }}"
+  changed_when: false
+  loop: "{{ vms }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 #- name: VMs state
 #  proxmox_kvm:
