@@ -75,14 +75,14 @@
 #fdsf  loop_control:
 #fdsf    label: "{{ item.name }}"  # Label for each loop iteration
 
-- name: Ensure VMs are ready for SSH connections
-  command: /bin/true
-  delegate_to: "{{ item.ipv4_address }}"
-  changed_when: false
-  loop: "{{ vms }}"
-  loop_control:
-    label: "{{ item.name }}"
-
+#- name: Ensure VMs are ready for SSH connections
+#  command: /bin/true
+#  delegate_to: "{{ item.ipv4_address }}"
+#  changed_when: false
+#  loop: "{{ vms }}"
+#  loop_control:
+#    label: "{{ item.name }}"
+#
 #- name: VMs state
 #  proxmox_kvm:
 #    api_user: 'root@pam'  # Use single quotes for YAML strings
