@@ -33,11 +33,15 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
-# Apply L2 Advertisement for metallb
+- name: Copy metallb L2 Advertisement YAML to the target node
+  ansible.builtin.copy:
+    src: ansible/inventory/l2Advertisement.yaml
+    dest: /tmp/l2Advertisement.yaml
+  when: inventory_hostname == groups['masters'][0]
+
 - name: Apply metallb L2 Advertisement
   ansible.builtin.command:
-    #cmd: kubectl apply -f https://raw.githubusercontent.com/JamesTurland/JimsGarage/main/Kubernetes/RKE2/l2Advertisement.yaml
-    cmd: kubectl apply -f /ansible/inventory/l2Advertisement.yaml
+    cmd: kubectl apply -f /tmp/l2Advertisement.yaml
   become_user: "{{ ansible_user }}"
   changed_when: true
   when: inventory_hostname == groups['masters'][0]
