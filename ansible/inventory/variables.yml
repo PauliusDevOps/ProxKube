@@ -6,7 +6,7 @@ vip_interface: eth0
 vip: 192.168.1.160
 
 metallb_version: v0.13.12
-lb_range: 192.168.1-140-192.168.1.150
+lb_range: 192.168.1.140-192.168.1.150
 lb_pool_name: first-pool
 
 rke2_version: "v1.29.4+rke2r1"
