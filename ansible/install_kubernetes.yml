@@ -1,7 +1,7 @@
 ## bootstraps first server and copies configs for others/agents
 #- name: Prepare all nodes
 #  hosts: masters,workers
-#  gather_facts: true # enables us to gather lots of useful variables: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/setup_module.html
+#  gather_facts: true
 #  roles:
 #    - prepare-nodes
 #
