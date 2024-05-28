@@ -68,7 +68,7 @@
 
 - name: Waiting to start virtual server machine completely
   wait_for:
-    timeout: 600
+    timeout: 300
   when: update_result.changed
 
 #fdsf- name: Wait for VMs to become reachable via SSH
