@@ -53,6 +53,7 @@
     ipconfig:
       ipconfig0: "ip={{ item.ipv4_address }},gw={{ item.ipv4_gateway }}"
     nameservers: 1.1.1.1
+    cores: "{{ item.cores }}"
     update: true
     state: present
     timeout: 15
