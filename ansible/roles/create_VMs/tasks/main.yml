@@ -31,6 +31,16 @@
     label: "{{ item.name }}"
   when: item.node != groups['main-node'][0]  # Only migrate if the target node is differen
 
+- name: update configuration | cores
+  proxmox_kvm:
+    api_user: 'root@pam'  # Use single quotes for YAML strings
+    api_token_id: 'git'  # Use single quotes for YAML strings
+    api_token_secret: 'de2600bb-3b75-4b47-9b63-d2466a4cf5af'
+    api_host: "{{ groups['main-node'][0] }}"
+    node: "{{ item.node }}"
+    cores: "{{ item.cores }}"
+    update: yes
+  when: inventory_hostname == groups['masters']
 
 - name: VMs IP change
   proxmox_kvm:
