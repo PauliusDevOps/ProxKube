@@ -40,7 +40,10 @@
     node: "{{ item.node }}"
     cores: "{{ item.cores }}"
     update: yes
-  when: inventory_hostname == groups['masters']
+  loop: "{{ vms }}"
+  loop_control:
+    label: "{{ item.name }}"  
+  when: inventory_hostname in groups['masters']
 
 - name: VMs IP change
   proxmox_kvm:
