@@ -39,33 +39,33 @@ vms:
     node: "ipa"
   - name: "master2"
     vmid: 201
-    ipv4_address: "192.168.1.173/24"
+    ipv4_address: "192.168.1.172/24"
     ipv4_gateway: "192.168.1.1"
     node: "lager"
     cores: 2
-  - name: "worker3"
+  - name: "worker2"
     vmid: 202
-    ipv4_address: "192.168.1.174/24"
+    ipv4_address: "192.168.1.173/24"
     ipv4_gateway: "192.168.1.1"
     node: "lager"
-  - name: "worker4"
+  - name: "worker3"
     vmid: 203
-    ipv4_address: "192.168.1.175/24"
+    ipv4_address: "192.168.1.174/24"
     ipv4_gateway: "192.168.1.1"
     node: "lager"
   - name: "master3"
     vmid: 301
-    ipv4_address: "192.168.1.176/24"
+    ipv4_address: "192.168.1.175/24"
     ipv4_gateway: "192.168.1.1"
     node: "ale"
     cores: 2
-  - name: "worker5"
+  - name: "worker4"
     vmid: 302
-    ipv4_address: "192.168.1.177/24"
+    ipv4_address: "192.168.1.176/24"
     ipv4_gateway: "192.168.1.1"
     node: "ale"
-  - name: "worker6"
+  - name: "worker5"
     vmid: 303
-    ipv4_address: "192.168.1.178/24"
+    ipv4_address: "192.168.1.177/24"
     ipv4_gateway: "192.168.1.1"
     node: "ale"

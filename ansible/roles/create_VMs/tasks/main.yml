@@ -37,7 +37,6 @@
     api_token_id: 'git'  # Use single quotes for YAML strings
     api_token_secret: 'de2600bb-3b75-4b47-9b63-d2466a4cf5af'
     api_host: "{{ groups['main-node'][0] }}"
-    node: "{{ item.node }}"
     cores: "{{ item.cores }}"
     update: yes
   loop: "{{ vms }}"
