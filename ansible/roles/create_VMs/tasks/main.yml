@@ -64,11 +64,12 @@
   loop: "{{ vms }}"
   loop_control:
     label: "{{ item.name }}"
+  register: update_result
 
 - name: Waiting to start virtual server machine completely
   wait_for:
     timeout: 600
-  when: wait.changed == true 
+  when: update_result.changed
 
 #fdsf- name: Wait for VMs to become reachable via SSH
 #fdsf  wait_for:
