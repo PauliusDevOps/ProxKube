@@ -1,8 +1,8 @@
 - name: Clone VMs from Template
   proxmox_kvm:
-    api_user: 'root@pam'  # Use single quotes for YAML strings
-    api_token_id: 'git'  # Use single quotes for YAML strings
-    api_token_secret: 'de2600bb-3b75-4b47-9b63-d2466a4cf5af'  # Use single quotes for YAML strings
+    api_user: {{ proxmox_api_user }}
+    api_token_id: {{ proxmox_api_token_id }}
+    api_token_secret: {{ proxmox_api_token_secret }}
     api_host: "{{ groups['main-node'][0] }}" 
     node: "{{ groups['main-node'][0] }}" 
     full: true
@@ -16,27 +16,26 @@
 
 - name: Migrate VMs to nodes
   proxmox_kvm:
-    api_user: 'root@pam'  # Use single quotes for YAML strings
-    api_token_id: 'git'  # Use single quotes for YAML strings
-    api_token_secret: 'de2600bb-3b75-4b47-9b63-d2466a4cf5af'
+    api_user: {{ proxmox_api_user }}
+    api_token_id: {{ proxmox_api_token_id }}
+    api_token_secret: {{ proxmox_api_token_secret }}
     api_host: "{{ groups['main-node'][0] }}"
-    #node: "{{ groups['main-node'][0] }}"  # Current node
-    node: "{{ item.node }}"  # Target node
+    node: "{{ item.node }}"  
     vmid: "{{ item.vmid }}"
-    state: stopped  # Ensure VM is stopped before migration
+    state: stopped 
     timeout: 60
     migrate: true
   loop: "{{ vms }}"
   loop_control:
     label: "{{ item.name }}"
-  when: item.node != groups['main-node'][0]  # Only migrate if the target node is differen
+  when: item.node != groups['main-node'][0] 
 
 
 - name: VMs IP change and cores
   proxmox_kvm:
-    api_user: 'root@pam'  # Use single quotes for YAML strings
-    api_token_id: 'git'  # Use single quotes for YAML strings
-    api_token_secret: 'de2600bb-3b75-4b47-9b63-d2466a4cf5af'
+    api_user: {{ proxmox_api_user }}
+    api_token_id: {{ proxmox_api_token_id }}
+    api_token_secret: {{ proxmox_api_token_secret }}
     api_host: "{{ groups['main-node'][0] }}"
     node: "{{ item.node }}"
     vmid: "{{ item.vmid }}"
@@ -53,9 +52,9 @@
 
 - name: Start VMs after migration
   proxmox_kvm:
-    api_user: 'root@pam'  # Use single quotes for YAML strings
-    api_token_id: 'git'  # Use single quotes for YAML strings
-    api_token_secret: 'de2600bb-3b75-4b47-9b63-d2466a4cf5af'
+    api_user: {{ proxmox_api_user }}
+    api_token_id: {{ proxmox_api_token_id }}
+    api_token_secret: {{ proxmox_api_token_secret }}
     api_host: "{{ groups['main-node'][0] }}"
     node: "{{ item.node }}"
     vmid: "{{ item.vmid }}"
@@ -68,46 +67,5 @@
 
 - name: Waiting to start virtual server machine completely
   wait_for:
-    timeout: 300
+    timeout: 200
   when: update_result.changed
-
-#fdsf- name: Wait for VMs to become reachable via SSH
-#fdsf  wait_for:
-#fdsf    host: "{{ item.ipv4_address }}"  # IP address of the VM
-#fdsf    port: 22  # SSH port
-#fdsf    delay: 10  # Initial delay before starting the checks
-#fdsf    timeout: 300  # Overall timeout for this task
-#fdsf    state: started  # Wait until the port is open
-#fdsf  loop: "{{ vms }}"  # Loop through the VMs list
-#fdsf  loop_control:
-#fdsf    label: "{{ item.name }}"  # Label for each loop iteration
-
-#- name: Ensure VMs are ready for SSH connections
-#  command: /bin/true
-#  delegate_to: "{{ item.ipv4_address }}"
-#  changed_when: false
-#  loop: "{{ vms }}"
-#  loop_control:
-#    label: "{{ item.name }}"
-#
-#- name: VMs state
-#  proxmox_kvm:
-#    api_user: 'root@pam'  # Use single quotes for YAML strings
-#    api_token_id: 'git'  # Use single quotes for YAML strings
-#    api_token_secret: 'de2600bb-3b75-4b47-9b63-d2466a4cf5af'
-#    api_host: "{{ groups['main-node'][0] }}"
-#    node: "{{ item.node }}"
-#    vmid: "{{ item.vmid }}"
-#    ipconfig:
-#      ipconfig0: "ip={{ item.ipv4_address }}"
-#    nameservers: 1.1.1.1
-#    update: true
-#    state: present
-#    timeout: 15
-#  loop: "{{ vms }}"
-#  loop_control:
-#    label: "{{ item.name }}"
-
-  
-#- name: List VMs
-#  shell: qm set 201 --ipconfig0 ip="192.168.1.170/24",gw=192.168.1.254
