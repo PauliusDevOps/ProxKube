@@ -65,6 +65,11 @@
   loop_control:
     label: "{{ item.name }}"
 
+- name: Waiting to start virtual server machine completely
+  wait_for:
+    timeout: 600
+  when: wait.changed == true 
+
 #fdsf- name: Wait for VMs to become reachable via SSH
 #fdsf  wait_for:
 #fdsf    host: "{{ item.ipv4_address }}"  # IP address of the VM
