@@ -45,15 +45,26 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
- 
-
-- name: Apply metallb L2 Advertisement
+- name: Apply MetalLB L2 Advertisement
   ansible.builtin.command:
     cmd: kubectl apply -f https://raw.githubusercontent.com/PauliusDevOps/test/main/l2Advertisement.yaml
-  become_user: "{{ ansible_user }}"
+  register: apply_result
+  retries: 5
+  delay: 60
+  until: apply_result.rc == 0
   changed_when: true
+  become: true
+  become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
+#
+#- name: Apply metallb L2 Advertisement
+#  ansible.builtin.command:
+#    cmd: kubectl apply -f https://raw.githubusercontent.com/PauliusDevOps/test/main/l2Advertisement.yaml
+#  become_user: "{{ ansible_user }}"
+#  changed_when: true
+#  when: inventory_hostname == groups['masters'][0]
+#
 # Deploy metal IP Pool to Server 1
 - name: Copy metallb IPPool to server 1
   ansible.builtin.template:
