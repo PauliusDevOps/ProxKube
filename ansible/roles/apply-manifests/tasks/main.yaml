@@ -25,14 +25,6 @@
   changed_when: true
   when: inventory_hostname == groups['masters'][0]
 
-## Wait for metallb deployment pods to be alive before deploying metallb manifests
-#- name: Wait for metallb pods to be ready, otherwise we cannot start metallb deployment
-#  ansible.builtin.command:
-#    cmd: "kubectl wait --namespace metallb-system --for=condition=ready pod --selector=component=controller --timeout=1800s"
-#  changed_when: true
-#  become_user: "{{ ansible_user }}"
-#  when: inventory_hostname == groups['masters'][0]
-
 - name: Wait for MetalLB controller pods to be ready, otherwise we cannot start MetalLB deployment
   ansible.builtin.command:
     cmd: "kubectl wait --namespace metallb-system --for=condition=ready pod --selector=component=controller --timeout=1800s"
@@ -57,14 +49,6 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
-#
-#- name: Apply metallb L2 Advertisement
-#  ansible.builtin.command:
-#    cmd: kubectl apply -f https://raw.githubusercontent.com/PauliusDevOps/test/main/l2Advertisement.yaml
-#  become_user: "{{ ansible_user }}"
-#  changed_when: true
-#  when: inventory_hostname == groups['masters'][0]
-#
 # Deploy metal IP Pool to Server 1
 - name: Copy metallb IPPool to server 1
   ansible.builtin.template:
