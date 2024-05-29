@@ -1,5 +1,5 @@
 - name: Prepare monitoring
-  hosts: main-node
+  hosts: masters
   gather_facts: true
   roles:
     - prepare-monitoring
