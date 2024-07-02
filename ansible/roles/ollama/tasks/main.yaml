@@ -1,3 +1,16 @@
+- name: Check if Helm is installed
+  ansible.builtin.command:
+    cmd: "helm version"
+  register: helm_check
+  ignore_errors: true
+
+- name: Install Helm if not present
+  ansible.builtin.shell: |
+    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  when: helm_check.rc != 0
+  become: true
+  become_user: "{{ ansible_user }}"
+
 - name: Add Ollama Helm repository
   ansible.builtin.command:
     cmd: "helm repo add ollama-helm https://otwld.github.io/ollama-helm/"
@@ -10,6 +23,17 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
+- name: Add Open Web UI Helm repository
+  ansible.builtin.command:
+    cmd: "helm repo add open-webui https://helm.openwebui.com/"
+  register: add_webui_repo_result
+  retries: 3
+  delay: 30
+  until: add_webui_repo_result.rc == 0
+  changed_when: false
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
 
 - name: Update Helm repositories
   ansible.builtin.command:
@@ -22,7 +46,6 @@
   become: true
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
-
 
 - name: Create Ollama namespace
   ansible.builtin.command:
@@ -37,6 +60,18 @@
   ignore_errors: true
   when: inventory_hostname == groups['masters'][0]
 
+- name: Create Open Web UI namespace
+  ansible.builtin.command:
+    cmd: "kubectl create namespace open-webui"
+  register: create_webui_ns_result
+  retries: 3
+  delay: 10
+  until: create_webui_ns_result.rc == 0
+  changed_when: create_webui_ns_result.rc == 0
+  become: true
+  become_user: "{{ ansible_user }}"
+  ignore_errors: true
+  when: inventory_hostname == groups['masters'][0]
 
 - name: Install Ollama using Helm
   ansible.builtin.command:
@@ -50,4 +85,14 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
-
+- name: Install Open Web UI using Helm
+  ansible.builtin.command:
+    cmd: "helm upgrade --install open-webui open-webui/open-webui --namespace open-webui"
+  register: webui_install_result
+  retries: 3
+  delay: 30
+  until: webui_install_result.rc == 0
+  changed_when: webui_install_result.rc == 0
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
