@@ -1,8 +1,53 @@
 - name: Add Ollama Helm repository
-  command: helm repo add ollama-helm https://otwld.github.io/ollama-helm/
-  
+  ansible.builtin.command:
+    cmd: "helm repo add ollama-helm https://otwld.github.io/ollama-helm/"
+  register: add_ollama_repo_result
+  retries: 3
+  delay: 30
+  until: add_ollama_repo_result.rc == 0
+  changed_when: false
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
+
+
 - name: Update Helm repositories
-  command: helm repo update
-  
-- name: Install Ollama chart
-  command: helm install ollama ollama-helm/ollama --namespace ollama
+  ansible.builtin.command:
+    cmd: "helm repo update"
+  register: update_repo_result
+  retries: 3
+  delay: 30
+  until: update_repo_result.rc == 0
+  changed_when: false
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
+
+
+- name: Create Ollama namespace
+  ansible.builtin.command:
+    cmd: "kubectl create namespace ollama"
+  register: create_ns_result
+  retries: 3
+  delay: 10
+  until: create_ns_result.rc == 0
+  changed_when: create_ns_result.rc == 0
+  become: true
+  become_user: "{{ ansible_user }}"
+  ignore_errors: true
+  when: inventory_hostname == groups['masters'][0]
+
+
+- name: Install Ollama using Helm
+  ansible.builtin.command:
+    cmd: "helm install ollama ollama-helm/ollama --namespace ollama"
+  register: helm_install_result
+  retries: 3
+  delay: 30
+  until: helm_install_result.rc == 0
+  changed_when: helm_install_result.rc == 0
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
+
+
