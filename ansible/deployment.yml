@@ -4,7 +4,7 @@
 #  roles:
 #    - prepare-monitoring
 #
-- name: Deploy Ollama Application
+- name: Deploy Ollama
   hosts: masters, workers
   gather_facts: true
   roles:
