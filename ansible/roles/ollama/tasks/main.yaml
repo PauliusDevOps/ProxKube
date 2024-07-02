@@ -1,0 +1,18 @@
+- name: Ensure Docker is installed
+  ansible.builtin.package:
+    name: docker.io
+    state: present
+- name: Pull Docker image from Docker Hub
+  ansible.builtin.docker_image:
+    name: "{{ dockerhub_username }}/ollama:latest"
+    source: pull
+- name: Run Ollama Docker container
+  ansible.builtin.docker_container:
+    name: ollama_container
+    image: "{{ dockerhub_username }}/ollama:latest"
+    state: started
+    restart_policy: always
+    ports:
+      - "80:5000"
+    env:
+
