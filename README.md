@@ -55,6 +55,7 @@ This is just a way to show your appreciation and also to help others get a first
 
 ## 8. Usefull commands
 
-  To see your current cluster configuration: 
+  To see your current cluster configuration:
+   
     kubectl config view --minify --raw
 
