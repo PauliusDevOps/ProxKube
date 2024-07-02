@@ -75,7 +75,7 @@
 
 - name: Install Ollama using Helm
   ansible.builtin.command:
-    cmd: "helm install ollama ollama-helm/ollama --namespace ollama"
+    cmd: "helm install ollama-{{ ansible_date_time.epoch }} ollama-helm/ollama --namespace ollama"
   register: helm_install_result
   retries: 3
   delay: 30
