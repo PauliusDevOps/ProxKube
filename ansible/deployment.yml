@@ -1,9 +1,9 @@
-- name: Prepare monitoring
-  hosts: masters
-  gather_facts: true
-  roles:
-    - prepare-monitoring
-
+#- name: Prepare monitoring
+#  hosts: masters
+#  gather_facts: true
+#  roles:
+#    - prepare-monitoring
+#
 - name: Deploy Ollama Application
   hosts: masters, workers
   gather_facts: true

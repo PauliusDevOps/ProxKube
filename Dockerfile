@@ -1,17 +1,17 @@
-# Base image
+# Use an appropriate base image
 FROM python:3.9-slim
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Install Ollama
-RUN pip install ollama
+# Copy the application code
+COPY . /app
 
-# Copy application files
-COPY . .
+# Install dependencies (if any)
+RUN pip install -r requirements.txt
 
-# Expose the port the app runs on
-EXPOSE 5000
+# Make sure the `ollama` executable is available in the PATH
+RUN chmod +x ollama
 
-# Command to run the app
-CMD ["ollama", "serve"]
+# Set the entrypoint
+ENTRYPOINT ["./ollama"]
