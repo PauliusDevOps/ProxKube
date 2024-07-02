@@ -1,10 +1,10 @@
 
 
-## 1. Kubernetes on Proxmox cluster
+## 1. Kubernetes on ProxMox cluster
 
-Kubernetes on Proxmox cluster. It is my DevOps course project for Code Academy learnings.
+It's my DevOps course project for Code Academy learnings.
 
-## 2. Project Description
+## 2. Description
 
 This is an important component of your project that many new developers often overlook.
 
@@ -55,5 +55,6 @@ This is just a way to show your appreciation and also to help others get a first
 
 ## 8. Usefull commands
 
-To see your current cluster configuration: kubectl config view --minify --raw
+  To see your current cluster configuration: 
+    kubectl config view --minify --raw
 
