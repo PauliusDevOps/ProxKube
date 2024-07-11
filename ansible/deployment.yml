@@ -12,7 +12,7 @@
 #
 
 - name: Deploy Portainer
-  hosts: masters
+  hosts: main-node
   gather_facts: true
   roles:
     - portainer
