@@ -1,3 +1,14 @@
+- name: Update apt package index
+  apt:
+    update_cache: yes
+- name: Install python3-kubernetes
+  apt:
+    name: python3-kubernetes
+    state: present
+- name: Debug Info
+  debug:
+    msg: "python3-kubernetes is installed successfully"
+    
 - name: Create Persistent Volume
   k8s:
     state: present
