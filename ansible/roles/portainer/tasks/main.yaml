@@ -1,3 +1,9 @@
+- name: Add Helm repo for Portainer
+  command: helm repo add portainer https://portainer.github.io/k8s/
+
+- name: Update Helm repos
+  command: helm repo update
+
 - name: Install Portainer
   command: >
     helm install portainer portainer/portainer
