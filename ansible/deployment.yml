@@ -10,7 +10,12 @@
 #  roles:
 #    - ollama
 #
-
+- name: Apply Persistent Volume
+  hosts: masters, workers
+  gather_facts: true
+  roles:
+    - persistent-volume
+    
 - name: Deploy Portainer
   hosts: main-node
   gather_facts: true
