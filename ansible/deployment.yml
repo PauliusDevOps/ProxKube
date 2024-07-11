@@ -4,10 +4,15 @@
 #  roles:
 #    - prepare-monitoring
 #
-- name: Deploy Ollama
+#- name: Deploy Ollama
+#  hosts: masters
+#  gather_facts: true
+#  roles:
+#    - ollama
+#
+
+- name: Deploy Portainer
   hosts: masters
   gather_facts: true
   roles:
-    - ollama
-
-
+    - portainer

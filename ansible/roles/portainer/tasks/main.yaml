@@ -1,0 +1,7 @@
+- name: Install Portainer
+  command: >
+    helm install portainer portainer/portainer
+    --namespace portainer
+    --create-namespace
+    --set service.type=NodePort
+    --set service.nodePort=30777
