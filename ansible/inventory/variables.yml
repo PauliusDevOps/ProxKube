@@ -19,9 +19,9 @@ ansible_become_method: sudo
 
 image_filename: jammy-server-cloudimg-amd64-disk-kvm.img 
 VMPASS: secrets.VMPASS 
-proxmox_api_user: secrets.PROXMOX_API_USER
-proxmox_api_token_id: secrets.PROXMOX_API_TOKEN_ID
-proxmox_api_token_secret: secrets.PROXMOX_API_TOKEN_SECRET
+proxmox_api_user: ${{ secrets.PROXMOX_API_USER }}
+proxmox_api_token_id: ${{ secrets.PROXMOX_API_TOKEN_ID }}
+proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
 
 
 

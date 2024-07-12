@@ -1,8 +1,8 @@
 - name: Clone VMs from Template
   proxmox_kvm:
-    api_user: ${{ proxmox_api_user }}
-    api_token_id: ${{ proxmox_api_token_id }}
-    api_token_secret: ${{ proxmox_api_token_secret }}
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_token_id }}"
+    api_token_secret: "{{ proxmox_api_token_secret }}"
     api_host: "{{ groups['main-node'][0] }}" 
     node: "{{ groups['main-node'][0] }}" 
     full: true
