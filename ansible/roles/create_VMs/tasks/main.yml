@@ -2,7 +2,7 @@
   proxmox_kvm:
     api_user: root@pam
     api_token_id: GitHubActions
-    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_token_secret: secrets.PROXMOX_API_TOKEN_SECRET
     api_host: "{{ groups['main-node'][0] }}" 
     node: "{{ groups['main-node'][0] }}" 
     full: true
