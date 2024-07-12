@@ -1,7 +1,7 @@
 - name: Clone VMs from Template
   proxmox_kvm:
-    api_user: secrets.PROXMOX_API_USER 
-    api_token_id: secrets.PROXMOX_API_TOKEN_ID
+    api_user: root@pam
+    api_token_id: GitHubActions
     api_token_secret: "{{ proxmox_api_token_secret }}"
     api_host: "{{ groups['main-node'][0] }}" 
     node: "{{ groups['main-node'][0] }}" 
