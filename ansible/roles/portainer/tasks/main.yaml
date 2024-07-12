@@ -22,39 +22,39 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
-- name: Check if portainer namespace exists
-  ansible.builtin.command:
-    cmd: kubectl get namespace portainer
-  register: check_namespace
-  ignore_errors: true
-  changed_when: false
-  become: true
-  become_user: "{{ ansible_user }}"
-  when: inventory_hostname == groups['masters'][0]
-
-- name: Create portainer namespace
-  ansible.builtin.command:
-    cmd: kubectl create namespace portainer
-  when: 
-    - check_namespace.rc != 0
-    - inventory_hostname == groups['masters'][0]
-  become: true
-  become_user: "{{ ansible_user }}"
-  ignore_errors: true
-
-- name: Create Persistent Volume Claim
-  k8s:
-    state: present
-    definition: "{{ lookup('template', '../pvc.yaml') }}"
-    namespace: portainer
-  register: pvc_result
-
-- name: Debug Persistent Volume Claim Creation Result
-  debug:
-    var: pvc_result
-
-
-
+#- name: Check if portainer namespace exists
+#  ansible.builtin.command:
+#    cmd: kubectl get namespace portainer
+#  register: check_namespace
+#  ignore_errors: true
+#  changed_when: false
+#  become: true
+#  become_user: "{{ ansible_user }}"
+#  when: inventory_hostname == groups['masters'][0]
+#
+#- name: Create portainer namespace
+#  ansible.builtin.command:
+#    cmd: kubectl create namespace portainer
+#  when: 
+#    - check_namespace.rc != 0
+#    - inventory_hostname == groups['masters'][0]
+#  become: true
+#  become_user: "{{ ansible_user }}"
+#  ignore_errors: true
+#
+#- name: Create Persistent Volume Claim
+#  k8s:
+#    state: present
+#    definition: "{{ lookup('template', '../pvc.yaml') }}"
+#    namespace: portainer
+#  register: pvc_result
+#
+#- name: Debug Persistent Volume Claim Creation Result
+#  debug:
+#    var: pvc_result
+#
+#
+#
 - name: Check if Portainer is already installed
   ansible.builtin.command:
     cmd: helm status portainer --namespace portainer
@@ -67,7 +67,7 @@
 
 - name: Install Portainer if not present (using Helm)
   ansible.builtin.command:
-    cmd: helm install portainer --namespace portainer portainer/portainer
+    cmd: helm upgrade --install --create-namespace -n portainer portainer portainer/portainer --set tls.force=true #helm install portainer --namespace portainer portainer/portainer
   register: helm_install_result
   retries: 3
   delay: 30
