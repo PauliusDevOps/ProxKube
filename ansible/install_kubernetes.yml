@@ -46,3 +46,9 @@
   gather_facts: true
   roles:
     - apply-manifests
+
+- name: Apply Persistent Volume
+  hosts: masters[0]
+  gather_facts: true
+  roles:
+    - persistent-volume

@@ -1,23 +1,19 @@
-#- name: Prepare monitoring
-#  hosts: masters
-#  gather_facts: true
-#  roles:
-#    - prepare-monitoring
-#
-#- name: Deploy Ollama
-#  hosts: masters
-#  gather_facts: true
-#  roles:
-#    - ollama
-#
-- name: Apply Persistent Volume
-  hosts: masters, workers
+- name: Prepare monitoring
+  hosts: masters
   gather_facts: true
   roles:
-    - persistent-volume
-    
+    - prepare-monitoring
+
 - name: Deploy Portainer
-  hosts: main-node
+  hosts: mmasters[0]
   gather_facts: true
   roles:
-    - portainer
+    - portainer    
+
+- name: Deploy Ollama
+  hosts: masters
+  gather_facts: true
+  roles:
+    - ollama
+
+   

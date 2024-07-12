@@ -34,34 +34,33 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           tags: tag:ci
-     
+    
+      - name: Create Proxmox infrastructure
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: ansible/infrastructure.yml
+          directory: ./
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          requirements: ansible/collections/requirements.yaml
+          options: |
+            --inventory ansible/inventory/.ansible_inventory
+            --extra-vars "@ansible/inventory/variables.yml"
+            --verbose
 
-#      - name: Create Proxmox infrastructure
-#        uses: dawidd6/action-ansible-playbook@v2
-#        with:
-#          playbook: ansible/infrastructure.yml
-#          directory: ./
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          requirements: ansible/collections/requirements.yaml
-#          options: |
-#            --inventory ansible/inventory/.ansible_inventory
-#            --extra-vars "@ansible/inventory/variables.yml"
-#            --verbose
-#
-#      - name: Run Kubernetes install
-#        uses: dawidd6/action-ansible-playbook@v2
-#        with:
-#          playbook: ansible/install_kubernetes.yml
-#          directory: ./
-#          # Use secrets manager to access SSH key securely
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          requirements: ansible/collections/requirements.yaml
-#          # Use the copied inventory file #ansible/inv.yml
-#          options: |
-#           --inventory ansible/inventory/.ansible_inventory 
-#           --extra-vars "@ansible/inventory/variables.yml"
-#           --verbose
-#
+      - name: Run Kubernetes install
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: ansible/install_kubernetes.yml
+          directory: ./
+          # Use secrets manager to access SSH key securely
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          requirements: ansible/collections/requirements.yaml
+          # Use the copied inventory file #ansible/inv.yml
+          options: |
+           --inventory ansible/inventory/.ansible_inventory 
+           --extra-vars "@ansible/inventory/variables.yml"
+           --verbose
+
       - name: Deployment
         uses: dawidd6/action-ansible-playbook@v2
         with:
