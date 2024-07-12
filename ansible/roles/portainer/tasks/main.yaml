@@ -1,12 +1,32 @@
 - name: Add Helm repo for Portainer
-  command: helm repo add portainer https://portainer.github.io/k8s/
+  ansible.builtin.command:
+    cmd: helm repo add portainer https://portainer.github.io/k8s/
+  register: add_repo_result
+  retries: 3
+  delay: 30
+  until: add_repo_result.rc == 0
+  changed_when: false
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
+
 
 - name: Update Helm repos
-  command: helm repo update
+  ansible.builtin.command:
+    cmd: helm repo update
+  register: update_repo_result
+  retries: 3
+  delay: 30
+  until: update_repo_result.rc == 0
+  changed_when: false
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
+
 
 - name: Create portainer namespace
   ansible.builtin.command:
-    cmd: "kubectl create namespace portainer"
+    cmd: kubectl create namespace portainer
   register: create_ns_result
   retries: 3
   delay: 10
@@ -16,14 +36,15 @@
   become_user: "{{ ansible_user }}"
   ignore_errors: true
   when: inventory_hostname == groups['masters'][0]
+
 - name: Install Portainer if not present (using Helm)
   ansible.builtin.command:
-    cmd: "helm install portainer --namespace portainer stable/portainer"
+    cmd: helm install portainer --namespace portainer stable/portainer
   register: helm_install_result
   retries: 3
   delay: 30
-  until: portainer_check.rc == 0
-  changed_when: portainer_check.rc == 0
+  until: helm_install_result.rc == 0
+  changed_when: helm_install_result.rc == 0
   become: true
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
