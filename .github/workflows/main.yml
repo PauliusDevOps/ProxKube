@@ -45,6 +45,9 @@ jobs:
           options: |
             --inventory ansible/inventory/.ansible_inventory
             --extra-vars "@ansible/inventory/variables.yml"
+            --extra-vars "proxmox_api_user=${{ secrets.PROXMOX_API_USER }}" 
+            --extra-vars "proxmox_api_token_id=${{ secrets.PROXMOX_API_TOKEN_ID }}" 
+            --extra-vars "proxmox_api_token_secret=${{ secrets.PROXMOX_API_TOKEN_SECRET }}"
             --verbose
 
       - name: Run Kubernetes install
