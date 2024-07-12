@@ -42,6 +42,19 @@
   become_user: "{{ ansible_user }}"
   ignore_errors: true
 
+- name: Create Persistent Volume Claim
+  k8s:
+    state: present
+    definition: "{{ lookup('template', '../pvc.yaml') }}"
+    namespace: portainer
+  register: pvc_result
+
+- name: Debug Persistent Volume Claim Creation Result
+  debug:
+    var: pvc_result
+
+
+
 - name: Check if Portainer is already installed
   ansible.builtin.command:
     cmd: helm status portainer --namespace portainer

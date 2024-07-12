@@ -21,13 +21,4 @@
   debug:
     var: pv_result
 
-- name: Create Persistent Volume Claim
-  k8s:
-    state: present
-    definition: "{{ lookup('template', '../pvc.yaml') }}"
-    namespace: default
-  register: pvc_result
 
-- name: Debug Persistent Volume Claim Creation Result
-  debug:
-    var: pvc_result
