@@ -39,7 +39,7 @@
 
 - name: Install Portainer if not present (using Helm)
   ansible.builtin.command:
-    cmd: helm install portainer --namespace portainer stable/portainer
+    cmd: helm install portainer --namespace portainer portainer/portainer
   register: helm_install_result
   retries: 3
   delay: 30
