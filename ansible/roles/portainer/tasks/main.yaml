@@ -22,6 +22,11 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
+- name: Check current storage classes
+  command: kubectl get sc
+  register: sc_check
+  ignore_errors: true
+
 - name: Create ceph-storage storage class if none exists
   command: |
     cat <<EOF | kubectl apply -f -
