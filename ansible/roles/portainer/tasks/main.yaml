@@ -28,21 +28,25 @@
   ignore_errors: true
 
 - name: Create ceph-storage storage class if none exists
-  command: |
-    cat <<EOF | kubectl apply -f -
-    apiVersion: storage.k8s.io/v1
-    kind: StorageClass
-    metadata:
-      name: ceph-storage
-    provisioner: kubernetes.io/no-provisioner
-    volumeBindingMode: WaitForFirstConsumer
-    EOF
-  when: sc_check.stdout == "" or sc_check.stdout is undefined
+  block:
+    - name: Create ceph-storage storage class
+      ansible.builtin.command:
+        cmd: |
+          kubectl apply -f -
+      args:
+        stdin: |
+          apiVersion: storage.k8s.io/v1
+          kind: StorageClass
+          metadata:
+            name: ceph-storage
+          provisioner: kubernetes.io/no-provisioner
+          volumeBindingMode: WaitForFirstConsumer
+      when: sc_check.stdout == "" or sc_check.stdout is undefined
 
 - name: Set ceph-storage as default StorageClass if none is set
   command: >
     kubectl patch storageclass ceph-storage
-    -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}"
+    -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
   when: "'(default)' not in sc_check.stdout"
 
 - name: Create portainer namespace
@@ -69,7 +73,6 @@
   become: true
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
-
 #- name: Check if portainer namespace exists
 #  ansible.builtin.command:
 #    cmd: kubectl get namespace portainer
