@@ -22,9 +22,18 @@
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
-- name: Check current storage classes
-  command: kubectl get sc
-  register: sc_check
+
+- name: Create ceph-storage storage class if none exists
+  command: |
+    cat <<EOF | kubectl apply -f -
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: ceph-storage
+    provisioner: kubernetes.io/no-provisioner
+    volumeBindingMode: WaitForFirstConsumer
+    EOF
+  when: sc_check.stdout == ""
 
 - name: Set ceph-storage as default StorageClass if none is set
   command: >
