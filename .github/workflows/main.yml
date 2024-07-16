@@ -22,7 +22,7 @@ jobs:
         run: pip install ansible-lint
   
       - name: Run Ansible Lint
-        run: ansible-lint .
+        run: ansible-lint -r .
         
       - name: Setup Python
         uses: actions/setup-python@v5
