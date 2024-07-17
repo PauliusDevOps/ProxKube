@@ -73,7 +73,7 @@
 
 - name: Resize VM disk and set SSD emulation
   shell: |
-    qm resize 8000 scsi0 +10G &&
+    qm resize 8000 scsi0 +20G &&
     qm set 8000 --scsihw virtio-scsi-pci --scsi0 CephPool:vm-8000-disk-0
   args:
     executable: /bin/bash
