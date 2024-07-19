@@ -49,7 +49,7 @@
 
 - name: Create VM on Proxmox
   shell: |
-    qm create 8000 --memory 3072 --core 1 --name ubuntu-cloud --net0 virtio,bridge=vmbr0 &&
+    qm create 8000 --memory 6144 --core 1 --name ubuntu-cloud --net0 virtio,bridge=vmbr0 &&
     qm importdisk 8000 /root/{{ image_filename }} CephPool &&
     qm set 8000 --scsihw virtio-scsi-pci --scsi0 CephPool:vm-8000-disk-0 &&
     qm set 8000 --ide2 CephPool:cloudinit &&
@@ -73,7 +73,7 @@
 
 - name: Resize VM disk and set SSD emulation
   shell: |
-    qm resize 8000 scsi0 +20G &&
+    qm resize 8000 scsi0 +40G &&
     qm set 8000 --scsihw virtio-scsi-pci --scsi0 CephPool:vm-8000-disk-0
   args:
     executable: /bin/bash
