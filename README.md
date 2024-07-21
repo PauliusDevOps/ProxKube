@@ -54,44 +54,18 @@ Edit the ansible/inventory/.ansible_inventory file to match your infrastructure:
     worker2 ansible_host=192.168.1.174 ansible_user=pk
     worker3 ansible_host=192.168.1.175 ansible_user=pk
 
-### Step 4: Install Ansible Collections
+## 4. Usage
+Running the Workflow
+
+Trigger the GitHub Actions workflow by pushing changes to the main branch or creating a pull request:
 
 
-## 4. How to Install and Run the Project
-
-If you are working on a project that a user needs to install or run locally in a machine like a "POS", you should include the steps required to install your project and also the required dependencies if any.
-
-Provide a step-by-step description of how to get the development environment set and running.
-## 5. GitHub Actions Secrets Configuration
-
-| Secret Name            | Description                                       |
-|------------------------|---------------------------------------------------|
-| REGISTRY_URL           | URL of the Docker registry                        |
-| REGISTRY_USERNAME      | Docker registry username                          |
-| REGISTRY_PASSWORD      | Docker registry password                          |
-| KUBECONFIG             | Base64 encoded kubeconfig file content            |
-| VAULT_PASSWORD_FILE    | Base64 encoded Ansible Vault password file content|
-| PROXMOX_API_TOKEN_ID   | Proxmox API token ID                              |
-| PROXMOX_API_TOKEN_SECRET| Proxmox API token secret                         |
-| PROXMOX_API_USER       | Proxmox API user                                  |
-| SSH_PRIVATE_KEY        | SSH private key                                   |
-| TAILSCALE_AUTHKEY      | Tailscale authentication key                      |
-| VMPASS                 | Virtual machine password                          |
+    git add .
+    git commit -m "Initial setup"
+    git push origin main
 
 
-Also if your project will require authentication like passwords or usernames, this is a good section to include the credentials.
-## 6. Include Credits
-
-If you worked on the project as a team or an organization, list your collaborators/team members. You should also include links to their GitHub profiles and social media too.
-
-Also, if you followed tutorials or referenced a certain material that might help the user to build that particular project, include links to those here as well.
-
-This is just a way to show your appreciation and also to help others get a first hand copy of the project.
-## 7. Add a License
-
-
-
-## 8. Usefull commands
+## 5. Usefull commands
 
   To see your current cluster configuration:
    
