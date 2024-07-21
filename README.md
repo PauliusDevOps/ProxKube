@@ -4,21 +4,59 @@
 
 It's my DevOps course project for Code Academy learnings.
 
-## 2. Description
+## 2. Prerequisites
 
-This is an important component of your project that many new developers often overlook.
+Before you begin, ensure you have met the following requirements:
+- Proxmox VE installed and accessible
+- Tailscale account and authentication key
+- SSH access to all nodes
+- Kubernetes knowledge
 
-Your description is an extremely important aspect of your project. A well-crafted description allows you to show off your work to other developers as well as potential employers.
+## 3. Installation
 
-The quality of a README description often differentiates a good project from a bad project. A good one takes advantage of the opportunity to explain and showcase:
+Follow these steps to install and configure ProxKube:
 
-    What your application does,
-    Why you used the technologies you used,
-    Some of the challenges you faced and features you hope to implement in the future.
+### Step 1: Clone the Repository
 
-## 3. Table of Contents (Optional)
+    git clone https://github.com/PauliusDevOps/ProxKube.git
+    cd ProxKube
 
-If your README is very long, you might want to add a table of contents to make it easy for users to navigate to different sections easily. It will make it easier for readers to move around the project with ease.
+### Step 2: Set Up GitHub Secrets
+
+In your GitHub repository, go to Settings > Secrets and add the following secrets:
+
+    TAILSCALE_AUTHKEY: Your Tailscale authentication key
+    SSH_PRIVATE_KEY: Private SSH key for accessing your nodes
+    PROXMOX_API_USER: Proxmox API user
+    PROXMOX_API_TOKEN_ID: Proxmox API token ID
+    PROXMOX_API_TOKEN_SECRET: Proxmox API token secret
+
+### Step 3: Configure Ansible Inventory
+
+Edit the ansible/inventory/.ansible_inventory file to match your infrastructure:
+
+    
+    [nodes]
+    ipa ansible_host=192.168.1.115 ansible_user=root
+    lager ansible_host=192.168.1.116 ansible_user=root
+    ale ansible_host=192.168.1.117 ansible_user=root
+    
+    [main-node]
+    ipa ansible_host=192.168.1.115 ansible_user=root
+    
+    [masters]
+    master1 ansible_host=192.168.1.170 ansible_user=pk
+    master2 ansible_host=192.168.1.171 ansible_user=pk
+    master3 ansible_host=192.168.1.172 ansible_user=pk
+    							   
+    [workers]                      
+    worker1 ansible_host=192.168.1.173 ansible_user=pk
+    worker2 ansible_host=192.168.1.174 ansible_user=pk
+    worker3 ansible_host=192.168.1.175 ansible_user=pk
+
+### Step 4: Install Ansible Collections
+
+
 ## 4. How to Install and Run the Project
 
 If you are working on a project that a user needs to install or run locally in a machine like a "POS", you should include the steps required to install your project and also the required dependencies if any.
