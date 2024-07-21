@@ -43,9 +43,17 @@
   become_user: "{{ ansible_user }}"
   ignore_errors: true
   when: inventory_hostname == groups['masters'][0]
-- name: Install Prometheus using Helm
+
+- name: Install Prometheus and Grafana using Helm
   ansible.builtin.command:
-    cmd: "helm install prometheus --namespace monitoring prometheus-community/kube-prometheus-stack"
+    cmd: >
+      helm install prometheus-community/kube-prometheus-stack
+      --create-namespace --namespace prometheus
+      --generate-name
+      --set prometheus.service.type=LoadBalancer
+      --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
+      --set grafana.service.type=LoadBalancer
+      --set grafana.adminpassword=<my cool password>
   register: helm_install_result
   retries: 3
   delay: 30
