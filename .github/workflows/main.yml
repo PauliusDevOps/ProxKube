@@ -41,7 +41,7 @@ jobs:
       
   prepare-infrastructure:
     runs-on: ubuntu-latest
-    needs: test
+    needs: test-playbooks
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4 
