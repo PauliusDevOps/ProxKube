@@ -39,12 +39,12 @@
   when: inventory_hostname == groups['masters'][0]
 
 
-- name: Patch local-storage StorageClass to be default
-  ansible.builtin.shell: |
-    kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-  become: true
-  changed_when: false
-  when: inventory_hostname == groups['masters'][0]
+#- name: Patch local-storage StorageClass to be default
+#  ansible.builtin.shell: |
+#    kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+#  become: true
+#  changed_when: false
+#  when: inventory_hostname == groups['masters'][0]
 
 - name: Add Portainer Helm repository
   kubernetes.core.helm_repository:
