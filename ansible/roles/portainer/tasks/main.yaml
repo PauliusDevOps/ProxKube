@@ -26,15 +26,17 @@
   debug:
     msg: "python3-kubernetes is installed successfully"
     
-- name: Create Persistent Volume
-  k8s:
-    state: present
-    definition: "{{ lookup('template', '../sc.yaml') }}"
-  register: pv_result
-
-- name: Debug Persistent Volume Creation Result
-  debug:
-    var: pv_result
+- name: Apply MetalLB L2 Advertisement
+  ansible.builtin.command:
+    cmd: kubectl apply -f https://raw.githubusercontent.com/PauliusDevOps/test/main/sc.yaml
+  register: apply_result
+  retries: 5
+  delay: 60
+  until: apply_result.rc == 0
+  changed_when: true
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
 
 
 - name: Patch local-storage StorageClass to be default
