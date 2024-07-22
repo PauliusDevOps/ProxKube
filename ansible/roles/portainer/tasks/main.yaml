@@ -84,8 +84,13 @@
   when: inventory_hostname == groups['masters'][0]
 
 - name: Apply Portainer LoadBalancer manifest
-  kubernetes.core.k8s:
-    state: present
-    namespace: portainer
-    src: https://downloads.portainer.io/ce2-19/portainer-lb.yaml
+  ansible.builtin.command:
+    cmd: kubectl apply -f https://downloads.portainer.io/ce2-19/portainer-lb.yaml
+  register: apply_result
+  retries: 5
+  delay: 60
+  until: apply_result.rc == 0
+  changed_when: true
+  become: true
+  become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
