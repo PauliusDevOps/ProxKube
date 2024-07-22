@@ -16,26 +16,30 @@
 
 - name: Apply StorageClass configuration
   ansible.builtin.command:
-    cmd: kubectl apply -f sc.yaml
+    cmd: kubectl apply -f ansible/roles/portainer/sc.yaml
   become: true
   changed_when: true
+  when: inventory_hostname == groups['masters'][0]
 
 - name: Patch local-storage StorageClass to be default
   ansible.builtin.shell: |
     kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
   become: true
   changed_when: false
+  when: inventory_hostname == groups['masters'][0]
 
 - name: Add Portainer Helm repository
   kubernetes.core.helm_repository:
     name: portainer
     repo_url: https://portainer.github.io/k8s/
     state: present
+  when: inventory_hostname == groups['masters'][0]
 
 - name: Update Helm repositories
   kubernetes.core.helm_repository:
     name: portainer
     state: updated
+  when: inventory_hostname == groups['masters'][0]
 
 - name: Install or upgrade Portainer using Helm
   kubernetes.core.helm:
@@ -47,9 +51,11 @@
     set:
       - name: service.type
         value: LoadBalancer
+  when: inventory_hostname == groups['masters'][0]
 
 - name: Apply Portainer LoadBalancer manifest
   kubernetes.core.k8s:
     state: present
     namespace: portainer
     src: https://downloads.portainer.io/ce2-19/portainer-lb.yaml
+  when: inventory_hostname == groups['masters'][0]
