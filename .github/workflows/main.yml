@@ -50,51 +50,57 @@ jobs:
       - name: Run Playbook Tests
         run: ansible-playbook ansible/${{ matrix.playbook }}
       
-  prepare-infrastructure:
+#  prepare-infrastructure:
+#    runs-on: ubuntu-latest
+#    needs: [ test-playbooks ] # test-roles,
+#    steps: 
+#      - name: Checkout code
+#        uses: actions/checkout@v4 
+#
+#      - name: Setup Python
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: '3.x'
+#
+#      - name: Install Requests
+#        run: pip install requests
+#
+#      - name: Install proxmoxer
+#        run: pip install proxmoxer
+#        
+#      - name: Connect to Tailscale
+#        uses: tailscale/github-action@v2
+#        with:
+#          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+#          tags: tag:ci
+#    
+#      - name: Create Proxmox infrastructure
+#        uses: dawidd6/action-ansible-playbook@v2
+#        with:
+#          playbook: ansible/infrastructure.yml
+#          directory: ./
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          requirements: ansible/collections/requirements.yaml
+#          options: |
+#            --inventory ansible/inventory/.ansible_inventory
+#            --extra-vars "@ansible/inventory/variables.yml"
+#            --extra-vars "proxmox_api_user=${{ secrets.PROXMOX_API_USER }}" 
+#            --extra-vars "proxmox_api_token_id=${{ secrets.PROXMOX_API_TOKEN_ID }}" 
+#            --extra-vars "proxmox_api_token_secret=${{ secrets.PROXMOX_API_TOKEN_SECRET }}"
+#            --verbose
+
+  install-kubernetes:
     runs-on: ubuntu-latest
-    needs: [ test-playbooks ] # test-roles,
-    steps: 
+    needs: test-playbooks #prepare-infrastructure
+    steps:
       - name: Checkout code
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install Requests
-        run: pip install requests
-
-      - name: Install proxmoxer
-        run: pip install proxmoxer
-        
       - name: Connect to Tailscale
         uses: tailscale/github-action@v2
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           tags: tag:ci
-    
-      - name: Create Proxmox infrastructure
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: ansible/infrastructure.yml
-          directory: ./
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          requirements: ansible/collections/requirements.yaml
-          options: |
-            --inventory ansible/inventory/.ansible_inventory
-            --extra-vars "@ansible/inventory/variables.yml"
-            --extra-vars "proxmox_api_user=${{ secrets.PROXMOX_API_USER }}" 
-            --extra-vars "proxmox_api_token_id=${{ secrets.PROXMOX_API_TOKEN_ID }}" 
-            --extra-vars "proxmox_api_token_secret=${{ secrets.PROXMOX_API_TOKEN_SECRET }}"
-            --verbose
-
-  install-kubernetes:
-    runs-on: ubuntu-latest
-    needs: prepare-infrastructure
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
       
       - name: Run Kubernetes install
         uses: dawidd6/action-ansible-playbook@v2
@@ -115,7 +121,13 @@ jobs:
     needs: install-kubernetes  
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4         
+        uses: actions/checkout@v4
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          tags: tag:ci
       
       - name: Deployment
         uses: dawidd6/action-ansible-playbook@v2
