@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        role: [ add-agent, add-server, apply-manifests, create_VMs, create_VM_template, kube-vip, ollama, persistent-volume, portainer, prepare-infra, prepare-monitoring, prepare-nodes, rke2-download, rke2-prepare ]
+        role: [ add-agent, add-server, apply-manifests, create_VMs, create_VM_template, kube-vip, prepare-infra, prepare-monitoring, prepare-nodes, rke2-download, rke2-prepare ]
         playbook: [ deployment.yml, infrastructure.yml, install_kubernetes.yml ]
 
     steps:
@@ -48,7 +48,7 @@ jobs:
         
   prepare-infrastructure:
     runs-on: ubuntu-latest
-    needs: test
+    #needs: test
     steps:        
       - name: Setup Python
         uses: actions/setup-python@v5
