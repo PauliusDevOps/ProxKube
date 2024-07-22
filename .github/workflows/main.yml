@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         role: [ add-agent, add-server, apply-manifests, create_VMs, create_VM_template, kube-vip, prepare-infra, prepare-monitoring, prepare-nodes, rke2-download, rke2-prepare ]
-        playbook: [ deployment.yml, infrastructure.yml, install_kubernetes.yml ]
+        #playbook: [ deployment.yml, infrastructure.yml, install_kubernetes.yml ]
 
     steps:
       - name: Checkout code
