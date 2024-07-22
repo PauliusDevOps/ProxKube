@@ -6,6 +6,7 @@
   retries: 120
   delay: 10
   changed_when: true
+  become: true
   become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
@@ -13,6 +14,7 @@
 - name: Apply metallb namespace
   ansible.builtin.command:
     cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
+  become: true
   become_user: "{{ ansible_user }}"
   changed_when: true
   when: inventory_hostname == groups['masters'][0]
@@ -21,6 +23,7 @@
 - name: Apply metallb manifest
   ansible.builtin.command:
     cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/{{ metallb_version }}/config/manifests/metallb-native.yaml
+  become: true
   become_user: "{{ ansible_user }}"
   changed_when: true
   when: inventory_hostname == groups['masters'][0]
@@ -63,6 +66,7 @@
 - name: Apply metallb ipppool
   ansible.builtin.command:
     cmd: kubectl apply -f /home/{{ ansible_user }}/ippool.yaml
+  become: true
   become_user: "{{ ansible_user }}"
   changed_when: true
   when: inventory_hostname == groups['masters'][0]
