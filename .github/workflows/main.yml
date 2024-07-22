@@ -36,12 +36,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: |
+          pip install ansible-lint
+          pip install molecule[docker] ansible
+          docker pull geerlingguy/docker-ubuntu2004-ansible:latest
+  
       - name: Run Playbook Tests
         run: ansible-playbook ansible/${{ matrix.playbook }}
       
   prepare-infrastructure:
     runs-on: ubuntu-latest
-    needs: test-playbooks
+    needs: [ test-roles, test-playbooks ]
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4 
