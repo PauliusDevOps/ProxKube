@@ -18,30 +18,30 @@
 
 - name: Download Ubuntu cloud image
   ansible.builtin.command:
-    cmd: wget https://cloud-images.ubuntu.com/jammy/current/{{ image_filename }}      #https://cloud-images.ubuntu.com/noble/current/{{ image_filename }}
+    cmd: wget https://cloud-images.ubuntu.com/jammy/current/{{ image_filename }}      # https://cloud-images.ubuntu.com/noble/current/{{ image_filename }}
   args:
     chdir: /root  # or specify the appropriate directory
   when: vm_does_not_exist
 
 - name: Install resolvconf package
-  apt:
+  ansible.builtin.apt:
     name: resolvconf
     state: present
   when: vm_does_not_exist
 
 - name: Install libguestfs-tools package
-  apt:
+  ansible.builtin.apt:
     name: libguestfs-tools
     state: present
   when: vm_does_not_exist
 
 - name: Update package cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
   when: vm_does_not_exist
 
 - name: Install qemu-guest-agent package
-  apt:
+  ansible.builtin.apt:
     name: qemu-guest-agent
     state: present
   when: vm_does_not_exist
