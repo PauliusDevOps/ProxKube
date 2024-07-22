@@ -1,5 +1,5 @@
 - name: Create StorageClass for local storage
-  ansible.builtin.k8s:
+  kubernetes.core.k8s:
     state: present
     definition: |
       apiVersion: storage.k8s.io/v1
@@ -9,33 +9,27 @@
       provisioner: kubernetes.io/no-provisioner
       volumeBindingMode: WaitForFirstConsumer
 
-- name: Set local-storage StorageClass as default
-  ansible.builtin.k8s:
-    state: patch
-    namespace: default
-    definition: |
-      apiVersion: storage.k8s.io/v1
-      kind: StorageClass
-      metadata:
-        name: local-storage
-        annotations:
-          storageclass.kubernetes.io/is-default-class: "true"
+- name: Patch local-storage StorageClass to be default
+  ansible.builtin.shell: |
+    kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  become: true
+  changed_when: false
 
 - name: Add Portainer Helm repository
-  ansible.builtin.helm_repository:
+  kubernetes.core.helm_repository:
     name: portainer
     repo_url: https://portainer.github.io/k8s/
     state: present
 
 - name: Update Helm repositories
-  ansible.builtin.helm_repository:
+  kubernetes.core.helm_repository:
     name: portainer
     state: updated
 
 - name: Install or upgrade Portainer using Helm
-  ansible.builtin.helm:
+  kubernetes.core.helm:
     name: portainer
-    chart: portainer/portainer
+    chart_ref: portainer/portainer
     namespace: portainer
     create_namespace: yes
     state: present
@@ -44,7 +38,7 @@
         value: LoadBalancer
 
 - name: Apply Portainer LoadBalancer manifest
-  ansible.builtin.k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: portainer
     src: https://downloads.portainer.io/ce2-19/portainer-lb.yaml
