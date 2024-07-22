@@ -130,7 +130,7 @@ jobs:
           tags: tag:ci
       - name: Install Ansible Collections
         run: |
-          ansible-galaxy collection install -r ansible/requirements.yml
+          ansible-galaxy collection install -r ansible/collections/requirements.yml
       
       - name: Deployment
         uses: dawidd6/action-ansible-playbook@v2
