@@ -1,3 +1,9 @@
+- name: Install Kubernetes Python library
+  ansible.builtin.pip:
+    name: kubernetes
+    state: present
+  become: true
+
 - name: Create StorageClass for local storage
   kubernetes.core.k8s:
     state: present
