@@ -26,7 +26,7 @@
   debug:
     msg: "python3-kubernetes is installed successfully"
     
-- name: Apply MetalLB L2 Advertisement
+- name: Create StorageClass for local storage
   ansible.builtin.command:
     cmd: kubectl apply -f https://raw.githubusercontent.com/PauliusDevOps/test/main/sc.yaml
   register: apply_result
@@ -72,7 +72,7 @@
 - name: Install or upgrade Portainer using Helm
   ansible.builtin.command:
     cmd: >
-      helm install --create-namespace -n portainer portainer portainer/portainer \
+      helm install --create-namespace -n portainer portainer portainer/portainer
       --set service.type=LoadBalancer
   register: helm_install_result
   retries: 3
