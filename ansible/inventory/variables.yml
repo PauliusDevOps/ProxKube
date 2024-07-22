@@ -13,17 +13,14 @@ rke2_version: "v1.29.4+rke2r1"
 rke2_install_dir: "/usr/local/bin"
 rke2_binary_url: "https://github.com/rancher/rke2/releases/download/{{ rke2_version }}/rke2.linux-amd64"
 
-#ansible_user: pk
 ansible_become: true
 ansible_become_method: sudo
 
-image_filename: jammy-server-cloudimg-amd64-disk-kvm.img 
-VMPASS: secrets.VMPASS 
+image_filename: jammy-server-cloudimg-amd64-disk-kvm.img
+VMPASS: secrets.VMPASS
 proxmox_api_user: ${{ secrets.PROXMOX_API_USER }}
 proxmox_api_token_id: ${{ secrets.PROXMOX_API_TOKEN_ID }}
 proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
-
-
 
 proxmox_storage: CephPool
 proxmox_clone_template: ubuntu-cloud
@@ -64,4 +61,3 @@ vms:
     ipv4_gateway: "192.168.1.1"
     node: "ale"
     cores: 2
-
