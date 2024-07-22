@@ -13,13 +13,29 @@
     name: kubernetes
     state: present
   become: true
+- name: Update apt package index
+  apt:
+    update_cache: yes
 
-- name: Apply StorageClass configuration
-  ansible.builtin.command:
-    cmd: kubectl apply -f {{ role_path }}/sc.yaml
-  become: true
-  changed_when: true
-  when: inventory_hostname == groups['masters'][0]
+- name: Install python3-kubernetes
+  apt:
+    name: python3-kubernetes
+    state: present
+
+- name: Debug Info
+  debug:
+    msg: "python3-kubernetes is installed successfully"
+    
+- name: Create Persistent Volume
+  k8s:
+    state: present
+    definition: "{{ lookup('template', '../sc.yaml') }}"
+  register: pv_result
+
+- name: Debug Persistent Volume Creation Result
+  debug:
+    var: pv_result
+
 
 - name: Patch local-storage StorageClass to be default
   ansible.builtin.shell: |
