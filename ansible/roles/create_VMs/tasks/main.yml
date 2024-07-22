@@ -11,7 +11,7 @@
     state: present
     clone: "{{ proxmox_clone_template }}"
     storage: "{{ proxmox_storage }}"
-    timeout: 80
+    timeout: 100
   loop: "{{ vms }}"
 
 - name: Migrate VMs to nodes
