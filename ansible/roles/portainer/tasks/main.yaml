@@ -25,10 +25,33 @@
 - name: Debug Info
   debug:
     msg: "python3-kubernetes is installed successfully"
+
+- name: Create /mnt/data directory
+  ansible.builtin.file:
+    path: /mnt/data
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+  become_user: root
+  when: inventory_hostname == groups['masters'][0]
     
 - name: Create StorageClass for local storage
   ansible.builtin.command:
     cmd: kubectl apply -f https://raw.githubusercontent.com/PauliusDevOps/test/main/sc.yaml
+  register: apply_result
+  retries: 5
+  delay: 60
+  until: apply_result.rc == 0
+  changed_when: true
+  become: true
+  become_user: "{{ ansible_user }}"
+  when: inventory_hostname == groups['masters'][0]
+
+- name: Create Persistent Volume
+  ansible.builtin.command:
+    cmd: kubectl apply -f https://raw.githubusercontent.com/PauliusDevOps/test/main/pv.yaml
   register: apply_result
   retries: 5
   delay: 60
