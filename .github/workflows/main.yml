@@ -32,6 +32,9 @@ jobs:
 
   test-playbooks:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        playbook: [ deployment.yml, infrastructure.yml, install_kubernetes.yml ]
     #needs: test-roles
     steps:
       - uses: actions/checkout@v4
