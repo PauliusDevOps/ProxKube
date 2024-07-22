@@ -66,15 +66,18 @@
   when: inventory_hostname == groups['masters'][0]
 
 - name: Install or upgrade Portainer using Helm
-  kubernetes.core.helm:
-    name: portainer
-    chart_ref: portainer/portainer
-    namespace: portainer
-    create_namespace: yes
-    state: present
-    set:
-      - name: service.type
-        value: LoadBalancer
+  ansible.builtin.command:
+    cmd: >
+      helm upgrade --install portainer portainer/portainer
+      --create-namespace --namespace portainer
+      --set service.type=LoadBalancer
+  register: helm_install_result
+  retries: 3
+  delay: 30
+  until: helm_install_result.rc == 0
+  changed_when: helm_install_result.rc == 0
+  become: true
+  become_user: "{{ ansible_user }}"
   when: inventory_hostname == groups['masters'][0]
 
 - name: Apply Portainer LoadBalancer manifest
