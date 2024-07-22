@@ -88,37 +88,37 @@ jobs:
 #            --extra-vars "proxmox_api_token_id=${{ secrets.PROXMOX_API_TOKEN_ID }}" 
 #            --extra-vars "proxmox_api_token_secret=${{ secrets.PROXMOX_API_TOKEN_SECRET }}"
 #            --verbose
-
-  install-kubernetes:
-    runs-on: ubuntu-latest
-    needs: test-playbooks #prepare-infrastructure
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Connect to Tailscale
-        uses: tailscale/github-action@v2
-        with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          tags: tag:ci
-      
-      - name: Run Kubernetes install
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: ansible/install_kubernetes.yml
-          directory: ./
-          # Use secrets manager to access SSH key securely
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          requirements: ansible/collections/requirements.yaml
-          # Use the copied inventory file #ansible/inv.yml
-          options: |
-           --inventory ansible/inventory/.ansible_inventory 
-           --extra-vars "@ansible/inventory/variables.yml"
-           --verbose
+#
+#  install-kubernetes:
+#    runs-on: ubuntu-latest
+#    needs: prepare-infrastructure
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Connect to Tailscale
+#        uses: tailscale/github-action@v2
+#        with:
+#          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+#          tags: tag:ci
+#      
+#      - name: Run Kubernetes install
+#        uses: dawidd6/action-ansible-playbook@v2
+#        with:
+#          playbook: ansible/install_kubernetes.yml
+#          directory: ./
+#          # Use secrets manager to access SSH key securely
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          requirements: ansible/collections/requirements.yaml
+#          # Use the copied inventory file #ansible/inv.yml
+#          options: |
+#           --inventory ansible/inventory/.ansible_inventory 
+#           --extra-vars "@ansible/inventory/variables.yml"
+#           --verbose
 
   deployment:
     runs-on: ubuntu-latest
-    needs: install-kubernetes  
+    #needs: install-kubernetes  
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

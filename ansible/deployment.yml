@@ -3,3 +3,8 @@
   gather_facts: true
   roles:
     - prepare-monitoring
+- name: Install Portainer on Kubernetes
+  hosts: masters
+  become: true
+  roles:
+    - portainer
