@@ -1,5 +1,6 @@
 - name: Check if the template already exists
-  command: qm status 8000
+  ansible.builtin.command:
+    cmd: qm status 8000
   ignore_errors: true
   register: template_status
   changed_when: false
@@ -9,13 +10,15 @@
     vm_does_not_exist: "{{ 'does not exist' in template_status.stderr }}"
 
 - name: Remove existing cloud image if present
-  command: rm -f {{ image_filename }}
+  ansible.builtin.command:
+    cmd: rm -f {{ image_filename }}
   args:
     chdir: /root  # or specify the appropriate directory
   when: vm_does_not_exist
 
 - name: Download Ubuntu cloud image
-  command: wget https://cloud-images.ubuntu.com/jammy/current/{{ image_filename }}      #https://cloud-images.ubuntu.com/noble/current/{{ image_filename }}
+  ansible.builtin.command:
+    cmd: wget https://cloud-images.ubuntu.com/jammy/current/{{ image_filename }}      #https://cloud-images.ubuntu.com/noble/current/{{ image_filename }}
   args:
     chdir: /root  # or specify the appropriate directory
   when: vm_does_not_exist
@@ -44,7 +47,8 @@
   when: vm_does_not_exist
 
 - name: Truncate /etc/machine-id in the cloud image
-  command: virt-customize -a /root/{{ image_filename }} --install qemu-guest-agent --truncate /etc/machine-id
+  ansible.builtin.command:
+    cmd: virt-customize -a /root/{{ image_filename }} --install qemu-guest-agent --truncate /etc/machine-id
   when: vm_does_not_exist
 
 - name: Create VM on Proxmox
@@ -60,39 +64,42 @@
   when: vm_does_not_exist
 
 - name: Set memory size and disable ballooning
-  shell: qm set 8000 --memory 3072 --balloon 0
+  ansible.builtin.command:
+    cmd: qm set 8000 --memory 3072 --balloon 0
   args:
     executable: /bin/bash
   when: vm_does_not_exist
   
 - name: Set processor cores and enable NUMA
-  shell: qm set 8000 --cores 1 --sockets 1 --numa 1
+  ansible.builtin.command:
+    cmd: qm set 8000 --cores 1 --sockets 1 --numa 1
   args:
     executable: /bin/bash
   when: vm_does_not_exist
 
 - name: Resize VM disk and set SSD emulation
-  shell: |
-    qm resize 8000 scsi0 +40G &&
-    qm set 8000 --scsihw virtio-scsi-pci --scsi0 CephPool:vm-8000-disk-0
+  ansible.builtin.command:
+    cmd: qm resize 8000 scsi0 +40G && qm set 8000 --scsihw virtio-scsi-pci --scsi0 CephPool:vm-8000-disk-0
   args:
     executable: /bin/bash
   when: vm_does_not_exist
 
 - name: Configure Cloud-Init settings
-  shell: |
-    qm set 8000 \
-        --ipconfig0 ip=192.168.1.222/24,gw=192.168.1.1 \
-        --nameserver 1.1.1.1 \
-        --sshkey ~/.ssh/id_rsa.pub \
-        --cipassword ${{ VMPASS }} \ 
-        --ciuser pk
+  ansible.builtin.command:
+    cmd: >
+      qm set 8000
+      --ipconfig0 ip=192.168.1.222/24,gw=192.168.1.1
+      --nameserver 1.1.1.1
+      --sshkey ~/.ssh/id_rsa.pub
+      --cipassword {{ lookup('env', 'VMPASS') }}
+      --ciuser pk
   args:
     executable: /bin/bash
   when: vm_does_not_exist
 
 - name: Enable QEMU Guest Agent
-  shell: qm set 8000 --agent 1
+  ansible.builtin.command:
+    cmd: qm set 8000 --agent 1
   args:
     executable: /bin/bash
   when: vm_does_not_exist
@@ -103,7 +110,8 @@
   when: vm_does_not_exist
 
 - name: Convert VM to Template if not already a template
-  shell: qm template 8000
+  ansible.builtin.command:
+    cmd: qm template 8000
   args:
     executable: /bin/bash
   when: vm_does_not_exist
