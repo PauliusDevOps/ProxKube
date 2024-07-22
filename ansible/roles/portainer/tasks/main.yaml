@@ -15,11 +15,13 @@
   become: true
 
 - name: Apply StorageClass configuration
-  ansible.builtin.command:
-    cmd: kubectl apply -f ansible/roles/portainer/sc.yaml
+  kubernetes.core.k8s:
+    kubeconfig: /etc/kubernetes/admin.conf  # Adjust this path as needed
+    state: present
+    src: "{{ role_path }}/sc.yaml"
   become: true
-  changed_when: true
   when: inventory_hostname == groups['masters'][0]
+
 
 - name: Patch local-storage StorageClass to be default
   ansible.builtin.shell: |
