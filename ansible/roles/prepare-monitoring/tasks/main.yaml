@@ -74,11 +74,11 @@
 
 - name: Set Prometheus URL environment variable
   ansible.builtin.set_fact:
-    PROMETHEUS_URL: "http://{{ prometheus_service_ip.stdout }}:9090"
+    PROMETHEUSURL: "http://{{ prometheus_service_ip.stdout }}:9090"
 
 - name: Print Prometheus URL
   ansible.builtin.debug:
-    msg: "Prometheus URL: {{ PROMETHEUS_URL }}"
+    msg: "Prometheus URL: {{ PROMETHEUSURL }}"
 
 - name: Get Grafana service IP
   ansible.builtin.command:
@@ -92,8 +92,8 @@
 
 - name: Set Grafana URL environment variable
   ansible.builtin.set_fact:
-    GRAFANA_URL: "http://{{ grafana_service_ip.stdout }}"
+    GRAFANAURL: "http://{{ grafana_service_ip.stdout }}"
 
 - name: Print Grafana URL
   ansible.builtin.debug:
-    msg: "Grafana URL: {{ GRAFANA_URL }}"
+    msg: "Grafana URL: {{ GRAFANAURL }}"

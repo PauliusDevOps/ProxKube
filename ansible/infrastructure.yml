@@ -1,7 +1,7 @@
 # bootstraps first server and copies configs for others/agents
 - name: Update Proxmox
   hosts: nodes
-  gather_facts: true 
+  gather_facts: true
   roles:
     - prepare-infra
 
