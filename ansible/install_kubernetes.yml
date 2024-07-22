@@ -45,4 +45,4 @@
   hosts: masters
   gather_facts: true
   roles:
-    - apply-manifests \n
+    - apply-manifests

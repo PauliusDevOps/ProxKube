@@ -29,7 +29,9 @@ jobs:
         run: |
           cd ansible/roles/${{ matrix.role }}
           molecule test
-
+      - name: Clear Ansible Cache (optional)
+        run: rm -rf ~/.ansible/cache
+        
   test-playbooks:
     runs-on: ubuntu-latest
     strategy:
