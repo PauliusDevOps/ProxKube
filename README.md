@@ -57,7 +57,7 @@ Edit the ansible/inventory/.ansible_inventory and ansible/inventory/variables.ym
 ## 4. Playbooks and Roles
 
 The automation process is divided into several playbooks, each performing specific tasks to set up the Kubernetes cluster on ProxMox. Here’s a step-by-step breakdown of what each playbook does and the roles they execute:
-### 1. Playbook: infrastructure.yml
+#### Playbook: infrastructure.yml
 
 This playbook prepares the ProxMox environment and sets up the initial infrastructure.
 Roles Executed:
@@ -76,7 +76,7 @@ Roles Executed:
         Migrates the cloned VMs to different nodes.
         Starts the VMs after migration.
 
-### 2. Playbook: install_kubernetes.yml
+#### Playbook: install_kubernetes.yml
 
 This playbook installs and configures Kubernetes components on the prepared infrastructure.
 Roles Executed:
@@ -104,7 +104,7 @@ Roles Executed:
         Waits for Kubernetes nodes to be ready.
         Sets up MetalLB for load balancing by applying necessary manifests and configurations.
 
-### 3. Playbook: deployment.yml
+#### Playbook: deployment.yml
 
 This playbook sets up monitoring and management tools on the Kubernetes cluster.
 Roles Executed:
