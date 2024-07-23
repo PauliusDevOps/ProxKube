@@ -2,7 +2,8 @@
 
 ## 1. Kubernetes on ProxMox cluster
 
-It's my DevOps course project for Code Academy learnings.
+It's my DevOps course project for Code Academy learnings. My goal was to automate Kubernets cluster 
+instalation on Proxmox environment to use it for learning Kubernetes ant test deployment on it.
 
 ## 2. Prerequisites
 
