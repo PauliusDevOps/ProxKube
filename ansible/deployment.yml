@@ -1,8 +1,8 @@
-#- name: Prepare monitoring
-#  hosts: masters
-#  gather_facts: true
-#  roles:
-#    - prepare-monitoring
+- name: Prepare monitoring
+  hosts: masters
+  gather_facts: true
+  roles:
+    - prepare-monitoring
 - name: Install Portainer on Kubernetes
   hosts: masters
   become: true
