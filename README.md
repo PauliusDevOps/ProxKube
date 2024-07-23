@@ -31,9 +31,9 @@ In your GitHub repository, go to Settings > Secrets and add the following secret
     PROXMOX_API_TOKEN_ID: Proxmox API token ID
     PROXMOX_API_TOKEN_SECRET: Proxmox API token secret
 
-### Step 3: Configure Ansible Inventory
+### Step 3: Configure Ansible Inventory and Variables
 
-Edit the ansible/inventory/.ansible_inventory file to match your infrastructure:
+Edit the ansible/inventory/.ansible_inventory and ansible/inventory/variables.yml file to match your infrastructure:
 
     
     [nodes]
